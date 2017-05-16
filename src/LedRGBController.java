@@ -9,17 +9,17 @@ public class LedRGBController {
 	
 	// pins allocated to colors
 	private static Pin PINRED = RaspiPin.GPIO_00;
-	private static Pin PINBLUE = RaspiPin.GPIO_02;
-	private static Pin PINGREEN = RaspiPin.GPIO_03;
+	private static Pin PINGREEN = RaspiPin.GPIO_02;
+	private static Pin PINBLUE = RaspiPin.GPIO_03;
 	
 	
 	private GpioController gpioController;
 	
 	private GpioPinDigitalOutput pinOutRed;
 	
-	private GpioPinDigitalOutput pinOutBlue;
-	
 	private GpioPinDigitalOutput pinOutGreen;
+	
+	private GpioPinDigitalOutput pinOutBlue;
 	
 	// Constructor
 	public LedRGBController() {
@@ -38,62 +38,17 @@ public class LedRGBController {
 	//}
 	
 	/**
-	 * Put in high pinOutRed and anyone else in low
+	 * Put all lights in high
 	 * @return true
 	 */
-	public boolean lightRed() {
+	public boolean turnOnAll() {
 		
 		pinOutRed.high();
-		
-		pinOutBlue.low();
-		
-		pinOutGreen.low();
-		
-		return true;
-	}
-	
-	/**
-	 * Persist red light from 
-	 * @return true
-	 */
-	public boolean lightRedPersist() {
-		
-		pinOutRed.high();
-		
-		pinOutBlue.low();
-		
-		pinOutGreen.low();
-		
-		return true;
-	}
-	
-	/**
-	 * Put in high pinOutBlue and anyone else in low
-	 * @return true
-	 */
-	public boolean lightBlue() {
-		
-		pinOutRed.low();
 		
 		pinOutBlue.high();
 		
-		pinOutGreen.low();
-		
-		return true;
-	}
-
-	/**
-	 * Put in high pinOutGreen and anyone else in low
-	 * @return true
-	 */
-	public boolean lightGreen() {
-	
-		pinOutRed.low();
-	
-		pinOutBlue.low();
-		
 		pinOutGreen.high();
-	
+		
 		return true;
 	}
 	
@@ -108,6 +63,118 @@ public class LedRGBController {
 		pinOutBlue.low();
 		
 		pinOutGreen.low();
+		
+		return true;
+	}
+	
+	////// RED
+	
+	/**
+	 * Put in high pinOutRed and anyone else in low
+	 * @return true
+	 */
+	public boolean lightRed() {
+		
+		turnOffAll();
+		
+		pinOutRed.high();
+		
+		return true;
+	}
+	
+	
+	/**
+	 * Persist RED light for m miliseconds
+	 * @param m milisenconds to stay in high
+	 * @return true
+	 */
+	public boolean lightRedPersist(int m) {
+		
+		turnOffAll();
+		
+		pinOutRed.high();
+		
+		try {
+			Thread.sleep(m);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return true;
+	}
+	
+	
+	
+	//////GREEN
+
+	/**
+	 * Put in high pinOutGreen and anyone else in low
+	 * @return true
+	 */
+	public boolean lightGreen() {
+	
+		turnOffAll();
+		
+		pinOutGreen.high();
+	
+		return true;
+	}
+	
+	/**
+	 * Persist GREEN light for m miliseconds
+	 * @param m milisenconds to stay in high
+	 * @return true
+	 */
+	public boolean lightGreenPersist(int m) {
+		
+		turnOffAll();
+		
+		pinOutGreen.high();
+		
+		try {
+			Thread.sleep(m);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return true;
+	}
+	
+	
+	//////BLUE
+	
+	/**
+	 * Put in high pinOutBlue and anyone else in low
+	 * @return true
+	 */
+	public boolean lightBlue() {
+		
+		turnOffAll();
+		
+		pinOutBlue.high();
+		
+		return true;
+	}
+	
+	/**
+	 * Persist BLUE light for m miliseconds
+	 * @param m milisenconds to stay in high
+	 * @return true
+	 */
+	public boolean lightBluePersist(int m) {
+		
+		turnOffAll();
+		
+		pinOutBlue.high();
+		
+		try {
+			Thread.sleep(m);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		return true;
 	}
