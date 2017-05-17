@@ -33,8 +33,9 @@ public class LedRGBController {
 		this.pinOutGreen = gpioController.provisionDigitalOutputPin(PINGREEN);
 	}
 	
+	
 	//public LedRGBController(int red, int green, int blue) {
-	//	this.gpioController = GpioFactory.getInstance();
+	//	
 	//}
 	
 	/**
@@ -70,7 +71,7 @@ public class LedRGBController {
 	////// RED
 	
 	/**
-	 * Put in high pinOutRed and anyone else in low
+	 * Put in high pinOutRed and any other in low
 	 * @return true
 	 */
 	public boolean lightRed() {
@@ -82,20 +83,34 @@ public class LedRGBController {
 		return true;
 	}
 	
-	
 	/**
-	 * Persist RED light for m miliseconds
-	 * @param m milisenconds to stay in high
+	 * Blink pinOutRed and any other in low
+	 * @param duration milisenconds to be blinking
 	 * @return true
 	 */
-	public boolean lightRedPersist(int m) {
+	public boolean blinkRed(int duration) {
+		
+		turnOffAll();
+		
+		pinOutRed.blink(250, duration);
+		
+		return true;
+	}
+	
+	
+	/**
+	 * Persist RED light for duration miliseconds
+	 * @param duration milisenconds to stay in high
+	 * @return true
+	 */
+	public boolean lightRedPersist(int duration) {
 		
 		turnOffAll();
 		
 		pinOutRed.high();
 		
 		try {
-			Thread.sleep(m);
+			Thread.sleep(duration);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -106,10 +121,10 @@ public class LedRGBController {
 	
 	
 	
-	//////GREEN
+	////// GREEN
 
 	/**
-	 * Put in high pinOutGreen and anyone else in low
+	 * Put in high pinOutGreen and any other in low
 	 * @return true
 	 */
 	public boolean lightGreen() {
@@ -122,18 +137,33 @@ public class LedRGBController {
 	}
 	
 	/**
-	 * Persist GREEN light for m miliseconds
-	 * @param m milisenconds to stay in high
+	 * Blink pinOutGreen and any other in low
+	 * @param duration milisenconds to be blinking
 	 * @return true
 	 */
-	public boolean lightGreenPersist(int m) {
+	public boolean blinkGreen(int duration) {
+		
+		turnOffAll();
+		
+		pinOutGreen.blink(250, duration);
+		
+		
+		return true;
+	}
+	
+	/**
+	 * Persist GREEN light for duration miliseconds
+	 * @param duration milisenconds to stay in high
+	 * @return true
+	 */
+	public boolean lightGreenPersist(int duration) {
 		
 		turnOffAll();
 		
 		pinOutGreen.high();
 		
 		try {
-			Thread.sleep(m);
+			Thread.sleep(duration);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -146,7 +176,7 @@ public class LedRGBController {
 	//////BLUE
 	
 	/**
-	 * Put in high pinOutBlue and anyone else in low
+	 * Put in high pinOutBlue and any other in low
 	 * @return true
 	 */
 	public boolean lightBlue() {
@@ -159,18 +189,32 @@ public class LedRGBController {
 	}
 	
 	/**
-	 * Persist BLUE light for m miliseconds
-	 * @param m milisenconds to stay in high
+	 * Blink pinOutBlue and any other in low
+	 * @param duration milisenconds to be blinking
 	 * @return true
 	 */
-	public boolean lightBluePersist(int m) {
+	public boolean blinkBlue(int duration) {
+		
+		turnOffAll();
+		
+		pinOutBlue.blink(250, duration);
+		
+		return true;
+	}
+	
+	/**
+	 * Persist BLUE light for duration miliseconds
+	 * @param duration milisenconds to stay in high
+	 * @return true
+	 */
+	public boolean lightBluePersist(int duration) {
 		
 		turnOffAll();
 		
 		pinOutBlue.high();
 		
 		try {
-			Thread.sleep(m);
+			Thread.sleep(duration);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
