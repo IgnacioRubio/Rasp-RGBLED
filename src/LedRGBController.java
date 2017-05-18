@@ -1,3 +1,7 @@
+
+
+import java.util.concurrent.Future;
+
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
@@ -8,9 +12,12 @@ import com.pi4j.io.gpio.RaspiPin;
 public class LedRGBController {
 	
 	// pins allocated to colors
-	private static Pin PINRED = RaspiPin.GPIO_00;
-	private static Pin PINGREEN = RaspiPin.GPIO_02;
-	private static Pin PINBLUE = RaspiPin.GPIO_03;
+	private static final Pin PINRED = RaspiPin.GPIO_00;
+	private static final Pin PINGREEN = RaspiPin.GPIO_02;
+	private static final Pin PINBLUE = RaspiPin.GPIO_03;
+	
+	
+	private static final long BLINKDELAY = 250;
 	
 	
 	private GpioController gpioController;
@@ -20,6 +27,10 @@ public class LedRGBController {
 	private GpioPinDigitalOutput pinOutGreen;
 	
 	private GpioPinDigitalOutput pinOutBlue;
+	
+	private Future<?> blinkRed;
+	private Future<?> blinkGreen;
+	private Future<?> blinkBlue;
 	
 	// Constructor
 	public LedRGBController() {
@@ -46,9 +57,9 @@ public class LedRGBController {
 		
 		pinOutRed.high();
 		
-		pinOutBlue.high();
-		
 		pinOutGreen.high();
+		
+		pinOutBlue.high();
 		
 		return true;
 	}
@@ -61,9 +72,24 @@ public class LedRGBController {
 		
 		pinOutRed.low();
 		
+		pinOutGreen.low();
+		
 		pinOutBlue.low();
 		
-		pinOutGreen.low();
+		return true;
+	}
+	
+	/**
+	 * Put all lights which are blinking not to blink
+	 * @return true
+	 */
+	public boolean turnOffAllBlinking() {
+		
+		stopBlinkRed();
+		
+		stopBlinkGreen();
+		
+		stopBlinkBlue();
 		
 		return true;
 	}
@@ -71,12 +97,13 @@ public class LedRGBController {
 	////// RED
 	
 	/**
-	 * Put in high pinOutRed and any other in low
+	 * Put in high RED and any other in low
 	 * @return true
 	 */
 	public boolean lightRed() {
 		
 		turnOffAll();
+		turnOffAllBlinking();
 		
 		pinOutRed.high();
 		
@@ -84,17 +111,34 @@ public class LedRGBController {
 	}
 	
 	/**
-	 * Blink pinOutRed and any other in low
-	 * @param duration milisenconds to be blinking
+	 * Blink only RED pin (set in low any other)
 	 * @return true
+	 * @see stopBlinkRed
 	 */
-	public boolean blinkRed(int duration) {
+	public boolean blinkRed() {
 		
 		turnOffAll();
+		turnOffAllBlinking();
 		
-		pinOutRed.blink(250, duration);
+		blinkRed = pinOutRed.blink(BLINKDELAY);
+		return true;		
 		
-		return true;
+	}
+	
+	/**
+	 * Blink RED and any other in low
+	 * @return true
+	 */
+	public boolean stopBlinkRed() {
+		
+		if(blinkRed == null) {
+			return false;
+		}
+		
+		turnOffAll();
+		blinkRed.cancel(true);
+		
+		return true;		
 	}
 	
 	
@@ -106,6 +150,7 @@ public class LedRGBController {
 	public boolean lightRedPersist(int duration) {
 		
 		turnOffAll();
+		turnOffAllBlinking();
 		
 		pinOutRed.high();
 		
@@ -124,31 +169,49 @@ public class LedRGBController {
 	////// GREEN
 
 	/**
-	 * Put in high pinOutGreen and any other in low
+	 * Put in high GREEN pin and any other in low
 	 * @return true
 	 */
 	public boolean lightGreen() {
 	
 		turnOffAll();
+		turnOffAllBlinking();
 		
 		pinOutGreen.high();
 	
 		return true;
 	}
 	
+	
 	/**
-	 * Blink pinOutGreen and any other in low
-	 * @param duration milisenconds to be blinking
+	 * Blink only GREEN pin (set in low any other)
 	 * @return true
+	 * @see stopBlinkGreen
 	 */
-	public boolean blinkGreen(int duration) {
+	public boolean blinkGreen() {
 		
 		turnOffAll();
+		turnOffAllBlinking();
 		
-		pinOutGreen.blink(250, duration);
+		blinkGreen = pinOutGreen.blink(BLINKDELAY);
+		return true;		
 		
+	}
+	
+	/**
+	 * Blink pinOutRed and any other in low
+	 * @return true
+	 */
+	public boolean stopBlinkGreen() {
 		
-		return true;
+		if(blinkGreen == null) {
+			return false;
+		}
+		
+		turnOffAll();
+		blinkGreen.cancel(true);
+		
+		return true;		
 	}
 	
 	/**
@@ -159,6 +222,7 @@ public class LedRGBController {
 	public boolean lightGreenPersist(int duration) {
 		
 		turnOffAll();
+		turnOffAllBlinking();
 		
 		pinOutGreen.high();
 		
@@ -176,12 +240,13 @@ public class LedRGBController {
 	//////BLUE
 	
 	/**
-	 * Put in high pinOutBlue and any other in low
+	 * Put in high BLUE pin and any other in low
 	 * @return true
 	 */
 	public boolean lightBlue() {
 		
 		turnOffAll();
+		turnOffAllBlinking();
 		
 		pinOutBlue.high();
 		
@@ -196,10 +261,42 @@ public class LedRGBController {
 	public boolean blinkBlue(int duration) {
 		
 		turnOffAll();
+		turnOffAllBlinking();
 		
-		pinOutBlue.blink(250, duration);
+		pinOutBlue.blink(BLINKDELAY, duration);
 		
 		return true;
+	}
+	
+	/**
+	 * Blink only BLUE pin (set in low any other)
+	 * @return true
+	 * @see stopBlinkBlue
+	 */
+	public boolean blinkBlue() {
+		
+		turnOffAll();
+		turnOffAllBlinking();
+		
+		blinkBlue = pinOutBlue.blink(BLINKDELAY);
+		return true;		
+		
+	}
+	
+	/**
+	 * Blink BLUE and any other in low
+	 * @return true
+	 */
+	public boolean stopBlinkBlue() {
+		
+		if(blinkBlue == null) {
+			return false;
+		}
+		
+		turnOffAll();
+		blinkBlue.cancel(true);
+		
+		return true;		
 	}
 	
 	/**
@@ -210,6 +307,7 @@ public class LedRGBController {
 	public boolean lightBluePersist(int duration) {
 		
 		turnOffAll();
+		turnOffAllBlinking();
 		
 		pinOutBlue.high();
 		
